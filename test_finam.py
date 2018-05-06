@@ -34,7 +34,6 @@ def get_fin_data(ticker = 'AFLT', em = 29):
         + urllib.urlencode(params))
     response = urllib.urlopen(url)
     content = response.read()
-    print url
     return string.split(content, '\n')
 
 data = get_fin_data('SBER', 3)
