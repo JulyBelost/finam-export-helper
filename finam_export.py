@@ -1,7 +1,9 @@
 import urllib
 import string
+import emitent_names
 from enum import Enum
 from datetime import datetime as dt
+
 
 # Here you can choose time period
 class Period(Enum):
@@ -47,16 +49,24 @@ def get_fin_data(market, code, ticker, from_str, to_str, period,
     content = response.read()
     return string.split(content, '\n')
 
-
-emitents = ['SBER', 'AFLT']
-codes = [3, 29]
+#  Markets:
+#   MosBirzha = 1
+#   Bonds = 2
+#   Indexes = 6
+#   Currencies = 45
+#  (ticker : market)
+emitents = [('SBER', '1'), ('AFLT', '1'), ('MOEX', '200')]
 from_str = '03.05.2018'
 to_str = '03.05.2018'
 period = Period.hour
 result = []
 
 for i in range(len(emitents)):
-    data = get_fin_data(1, codes[i], emitents[i], from_str, to_str, period)
+    ticker = emitents[i][0]
+    market = emitents[i][1]
+    code = emitent_names.define_emitent_code(ticker, market)
+
+    data = get_fin_data(market, code, ticker, from_str, to_str, period)
 
     result += data[(0 if i == 0 else 1):-1]
 
