@@ -21,7 +21,7 @@ def load_finam_vars():
         vars[(t,m)] = c
 
 
-def define_emitent_code(ticker='SBER', market='1'):
+def define_emitent_code(ticker, market):
     global vars
     if not vars:
         load_finam_vars()

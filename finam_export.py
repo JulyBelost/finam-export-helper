@@ -1,4 +1,4 @@
-import urllib
+import urllib, time
 import string
 import emitent_names
 from enum import Enum
@@ -55,10 +55,11 @@ def get_fin_data(market, code, ticker, from_str, to_str, period,
 #   Indexes = 6
 #   Currencies = 45
 #  (ticker : market)
-emitents = [('SBER', '1'), ('AFLT', '1'), ('MOEX', '200')]
-from_str = '03.05.2018'
-to_str = '03.05.2018'
-period = Period.hour
+emitents = [('SBER', '1'), ('AFLT', '1'), ('MSNG', '1'), ('AGRO', '1'),
+    ('GTLC', '1'), ('POLY', '1'), ('RUAL', '1'), ('YNDX', '1'), ('QIWI', '1')]
+from_str = '01.04.2017'
+to_str = '01.04.2018'
+period = Period.day
 result = []
 
 for i in range(len(emitents)):
@@ -69,6 +70,11 @@ for i in range(len(emitents)):
     data = get_fin_data(market, code, ticker, from_str, to_str, period)
 
     result += data[(0 if i == 0 else 1):-1]
+    time.sleep(1)
 
-for line in result:
-    print line
+# for line in result:
+#      print line
+
+with open('./finam_output.txt', 'w') as f:
+    for item in result:
+        f.write("{}\n".format(item))
