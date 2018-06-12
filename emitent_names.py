@@ -2,6 +2,7 @@ import urllib
 import string
 
 vars = {}
+markts = {}
 
 def load_finam_vars():
     url = 'http://www.finam.ru/cache/icharts/icharts.js'
@@ -16,9 +17,12 @@ def load_finam_vars():
         s = finam_var_list[v]
         js_vars[key] = (s[s.find('[') + 1 : s.find(']')].split(','))
 
-    global vars
+    global vars, markts
     for c,t,m in zip(js_vars['codes'],js_vars['tickers'],js_vars['markets']):
         vars[(t,m)] = c
+        if (t in markts):
+            markts[t].append(m)
+        else: markts[t] = [m]
 
 
 def define_emitent_code(ticker, market):
@@ -29,3 +33,17 @@ def define_emitent_code(ticker, market):
     name = "'{}'".format(ticker)
 
     return vars[(name, market)]
+
+
+def define_emitent_markets(ticker):
+    global markts
+    if not markts:
+        load_finam_vars()
+
+    name = "'{}'".format(ticker)
+
+    return (ticker, sorted(markts[name]))
+
+# TODO
+# def all_market_emitents(market):
+#     return sorted(emitents[market])
