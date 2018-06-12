@@ -2,18 +2,18 @@ import urllib, time
 import string
 import emitent_names
 from enum import Enum
-from datetime import datetime as dt
+from datetime import datetime as dt, timedelta as td
 
 
 # Here you can choose time period
 class Period(Enum):
     tick, min, min5, min10, min15, min30, hour, day, week, month = range(1, 11)
 
-def get_fin_data(market, code, ticker, from_str, to_str, period,
+def get_fin_data(market, code, ticker, from_date, to_date, period,
     dtf=3, tmf=2, msor=1, sep=1, sep2=1, datf=1, at=1, fsp=1):
 
-    from_date = dt.strptime(from_str, "%d.%m.%Y").date()
-    to_date = dt.strptime(to_str, "%d.%m.%Y").date()
+    from_str = from_date.strftime("%d.%m.%Y")
+    to_str = to_date.strftime("%d.%m.%Y")
 
     params  = [ ('market', market),                 #market code
                 ('em', code),                       #instrument code
@@ -54,27 +54,38 @@ def get_fin_data(market, code, ticker, from_str, to_str, period,
 #   Bonds = 2
 #   Indexes = 6
 #   Currencies = 45
+
 #  (ticker : market)
-emitents = [('SBER', '1'), ('AFLT', '1'), ('MSNG', '1'), ('AGRO', '1'),
-    ('GTLC', '1'), ('POLY', '1'), ('RUAL', '1'), ('YNDX', '1'), ('QIWI', '1')]
-from_str = '01.04.2017'
-to_str = '01.04.2018'
-period = Period.day
+emitents = [('AFLT', '1'), ('GAZP', '1'), ('GMKN', '1'), ('LKOH', '1'),
+            ('MGNT', '1'), ('MSNG', '1'), ('MTSS', '1'), ('ROSN', '1'),
+            ('SBER', '1'), ('SIBN', '1'), ('SNGS', '1')]
+
+from_str = '02.01.2010'
+to_str = '02.05.2012'
+period = Period.min
 result = []
+
+from_date = dt.strptime(from_str, "%d.%m.%Y").date()
+to_date = dt.strptime(to_str, "%d.%m.%Y").date()
 
 for i in range(len(emitents)):
     ticker = emitents[i][0]
     market = emitents[i][1]
     code = emitent_names.define_emitent_code(ticker, market)
+    print(ticker, market, code)
 
-    data = get_fin_data(market, code, ticker, from_str, to_str, period)
+    from_var = from_date
+    to_var = to_date
 
-    result += data[(0 if i == 0 else 1):-1]
-    time.sleep(1)
+    while(to_var >= from_var):
+        print(from_var, min(from_var+td(days=364), to_var))
+        data = get_fin_data(market, code, ticker, from_var,
+                            min(from_var+td(days=364), to_var), period)
+        from_var += td(days=365)
+        result += data[(0 if i == 0 else 1):-1]
+        time.sleep(1)
 
-# for line in result:
-#      print line
-
-with open('./finam_output.txt', 'w') as f:
+path = './finam_output_{}_{}.txt'.format(from_str, to_str)
+with open(path, 'w') as f:
     for item in result:
         f.write("{}\n".format(item))
