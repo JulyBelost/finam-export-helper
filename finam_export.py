@@ -61,7 +61,7 @@ emitents = [('AFLT', '1'), ('GAZP', '1'), ('GMKN', '1'), ('LKOH', '1'),
             ('SBER', '1'), ('SIBN', '1'), ('SNGS', '1')]
 
 from_str = '02.01.2010'
-to_str = '02.05.2012'
+to_str = '02.01.2012'
 period = Period.min
 result = []
 
@@ -77,12 +77,14 @@ for i in range(len(emitents)):
     from_var = from_date
     to_var = to_date
 
+    j = 0
     while(to_var >= from_var):
         print(from_var, min(from_var+td(days=364), to_var))
         data = get_fin_data(market, code, ticker, from_var,
                             min(from_var+td(days=364), to_var), period)
         from_var += td(days=365)
-        result += data[(0 if i == 0 else 1):-1]
+        result += data[(0 if (i or j) == 0 else 1):-1]
+        j += 1
         time.sleep(1)
 
 path = './finam_output_{}_{}.txt'.format(from_str, to_str)
