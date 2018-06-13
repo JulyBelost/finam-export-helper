@@ -87,7 +87,7 @@ for i in range(len(emitents)):
         j += 1
         time.sleep(1)
 
-path = './finam_output_{}_{}.txt'.format(from_str, to_str)
+path = './finam_output_{}_{}.txt'.format(from_str, to_str).replace('.', '')
 with open(path, 'w') as f:
     for item in result:
         f.write("{}\n".format(item))
