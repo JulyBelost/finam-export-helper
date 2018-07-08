@@ -5,6 +5,8 @@ import finam_export
 #   Bonds = 2
 #   Indexes = 6
 #   Currencies = 45
+#   US(BATS) = 25, 517
+#   bad markets = 91, 519
 
 #  'emitents' = [(ticker : market)]
 portfolios = [
