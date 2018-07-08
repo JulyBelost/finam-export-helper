@@ -49,45 +49,47 @@ def get_fin_data(market, code, ticker, from_date, to_date, period,
     content = response.read()
     return string.split(content, '\n')
 
-#  Markets:
-#   MosBirzha = 1
-#   Bonds = 2
-#   Indexes = 6
-#   Currencies = 45
 
-#  (ticker : market)
-emitents = [('AFLT', '1'), ('GAZP', '1'), ('GMKN', '1'), ('LKOH', '1'),
-            ('MGNT', '1'), ('MSNG', '1'), ('MTSS', '1'), ('ROSN', '1'),
-            ('SBER', '1'), ('SIBN', '1'), ('SNGS', '1')]
+def gather_finam_data(emitents, from_str, to_str, period = Period.day):
+    """Creates file with aggregated data from finam.ru for given parameters.
 
-from_str = '02.01.2010'
-to_str = '02.01.2012'
-period = Period.min
-result = []
+    Is able to bypass finam data size restriction by splitting query into
+    several requests.
 
-from_date = dt.strptime(from_str, "%d.%m.%Y").date()
-to_date = dt.strptime(to_str, "%d.%m.%Y").date()
+    Args:
+        emitents : list of tuples (ticker : market)
+        from_str : start date string in "dd.mm.yyyy" format
+        to_str   : end date string in "dd.mm.yyyy" format
+        period   : granularity of time series represented as Period Enum
+    """
+    result = []
 
-for i in range(len(emitents)):
-    ticker = emitents[i][0]
-    market = emitents[i][1]
-    code = emitent_names.define_emitent_code(ticker, market)
-    print(ticker, market, code)
+    from_date = dt.strptime(from_str, "%d.%m.%Y").date()
+    to_date = dt.strptime(to_str, "%d.%m.%Y").date()
 
-    from_var = from_date
-    to_var = to_date
+    for i in range(len(emitents)):
+        ticker = emitents[i][0]
+        market = emitents[i][1]
+        code = emitent_names.define_emitent_code(ticker, market)
+        print(ticker, market, code)
 
-    j = 0
-    while(to_var >= from_var):
-        print(from_var, min(from_var+td(days=364), to_var))
-        data = get_fin_data(market, code, ticker, from_var,
-                            min(from_var+td(days=364), to_var), period)
-        from_var += td(days=365)
-        result += data[(0 if (i or j) == 0 else 1):-1]
-        j += 1
-        time.sleep(1)
+        from_var = from_date
+        to_var = to_date
 
-path = './finam_output_{}_{}.txt'.format(from_str, to_str).replace('.', '')
-with open(path, 'w') as f:
-    for item in result:
-        f.write("{}\n".format(item))
+        j = 0
+        while(to_var >= from_var):
+            print(from_var, min(from_var+td(days=364), to_var))
+            data = get_fin_data(market, code, ticker, from_var,
+                                min(from_var+td(days=364), to_var), period)
+            from_var += td(days=365)
+            result += data[(0 if (i or j) == 0 else 1):-1]
+            j += 1
+            time.sleep(1)
+
+    em_str = '_'.join([em[0] for em in emitents])
+    filename = 'stocks_{}_{}_{}'.format(from_str,
+                                        to_str,
+                                        em_str).replace('.', '')
+    with open('./' + filename + '.txt', 'w') as f:
+        for item in result:
+            f.write("{}\n".format(item))
