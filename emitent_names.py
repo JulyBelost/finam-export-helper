@@ -1,8 +1,9 @@
 import urllib
 import string
 
-vars = {}
+tm_to_code = {}
 markts = {}
+emitents = {}
 
 def load_finam_vars():
     url = 'http://www.finam.ru/cache/icharts/icharts.js'
@@ -13,29 +14,33 @@ def load_finam_vars():
 
     js_vars = {}
 
+    # create js_vars with 'codes', 'tickers', 'markets' lists
     for key, v in {'codes': 0, 'tickers': 2, 'markets': 3}.iteritems():
         s = finam_var_list[v]
         js_vars[key] = (s[s.find('[') + 1 : s.find(']')].split(','))
 
-    global vars, markts
+    global tm_to_code, markts, emitents
     for c,t,m in zip(js_vars['codes'],js_vars['tickers'],js_vars['markets']):
-        vars[(t,m)] = c
+        tm_to_code[(t,m)] = c
         if (t in markts):
             markts[t].append(m)
         else: markts[t] = [m]
+        if (m in emitents):
+            emitents[m].append(t)
+        else: emitents[m] = [t]
 
 
 def define_emitent_code(ticker, market):
-    global vars
-    if not vars:
+    global tm_to_code
+    if not tm_to_code:
         load_finam_vars()
 
     name = "'{}'".format(ticker)
 
-    return vars[(name, market)]
+    return tm_to_code[(name, market)]
 
 
-def define_emitent_markets(ticker):
+def get_emitent_markets(ticker):
     global markts
     if not markts:
         load_finam_vars()
@@ -44,6 +49,10 @@ def define_emitent_markets(ticker):
 
     return (ticker, sorted(markts[name]))
 
-# TODO
-# def all_market_emitents(market):
-#     return sorted(emitents[market])
+
+def get_market_emitents(market):
+    global emitents
+    if not emitents:
+        load_finam_vars()
+
+    return (market, sorted(emitents[market]))
