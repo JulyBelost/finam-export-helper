@@ -87,9 +87,9 @@ def gather_finam_data(emitents, from_str, to_str, period = Period.day):
             time.sleep(1)
 
     em_str = '_'.join([em[0] for em in emitents])
-    filename = 'stocks_{}_{}_{}'.format(from_str,
-                                        to_str,
-                                        em_str).replace('.', '')
+    filename = 'stocks_{}_{}_{}'.format(em_str,
+                                        from_str,
+                                        to_str).replace('.', '')
     with open('./' + filename + '.txt', 'w') as f:
         for item in result:
             f.write("{}\n".format(item))
