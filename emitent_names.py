@@ -22,12 +22,8 @@ def load_finam_vars():
     global tm_to_code, markts, emitents
     for c,t,m in zip(js_vars['codes'],js_vars['tickers'],js_vars['markets']):
         tm_to_code[(t,m)] = c
-        if (t in markts):
-            markts[t].append(m)
-        else: markts[t] = [m]
-        if (m in emitents):
-            emitents[m].append(t)
-        else: emitents[m] = [t]
+        markts.setdefault(t, []).append(m)
+        emitents.setdefault(m, []).append(t)
 
 
 def define_emitent_code(ticker, market):
