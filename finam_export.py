@@ -50,7 +50,8 @@ def get_fin_data(market, code, ticker, from_date, to_date, period,
     return string.split(content, '\n')
 
 
-def gather_finam_data(emitents, from_str, to_str, period = Period.day):
+def gather_finam_data(emitents, from_str, to_str,
+                      period = Period.day, path = './'):
     """Creates file with aggregated data from finam.ru for given parameters.
 
     Is able to bypass finam data size restriction by splitting query into
@@ -90,6 +91,6 @@ def gather_finam_data(emitents, from_str, to_str, period = Period.day):
     filename = 'stocks_{}_{}_{}'.format(em_str,
                                         from_str,
                                         to_str).replace('.', '')
-    with open('./' + filename + '.txt', 'w') as f:
+    with open(path + filename + '.txt', 'w') as f:
         for item in result:
             f.write("{}\n".format(item))

@@ -23,7 +23,7 @@ def load_finam_vars():
     for c,t,m in zip(js_vars['codes'],js_vars['tickers'],js_vars['markets']):
         tm_to_code[(t,m)] = c
         markts.setdefault(t, []).append(m)
-        emitents.setdefault(m, []).append(t)
+        emitents.setdefault(m, []).append(t.strip('\''))
 
 
 def define_emitent_code(ticker, market):
