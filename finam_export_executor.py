@@ -4,6 +4,8 @@ from distutils.dir_util import mkpath
 
 #  Markets:
 #   MosBirzha = 1
+#   MosBirzha top = 200
+#   ? = 8
 #   Bonds = 2
 #   Indexes = 6
 #   Currencies = 45
@@ -14,11 +16,13 @@ from distutils.dir_util import mkpath
 
 experiment_number = '0'
 
-market = '1'
+market = '200'
 sample_number = 10
 portfolio_size = 3
 data_folder = ('/Users/julybelost/Dropbox/diploma/portfolio-fixed-share/input/' +
-    'finam_raw/no{}/portfolio_size{}/'.format(experiment_number, portfolio_size))
+    'finam_raw/no{}/market{}_size{}/'.format(experiment_number,
+                                             market,
+                                             portfolio_size))
 
 print('result files will be in ' + data_folder)
 mkpath(data_folder)
