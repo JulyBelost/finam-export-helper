@@ -17,15 +17,18 @@ from distutils.dir_util import mkpath
 experiment_number = '0'
 
 market = '200'
-sample_number = 10
-portfolio_size = 3
-data_folder = ('/Users/julybelost/Dropbox/diploma/portfolio-fixed-share/input/' +
-    'finam_raw/no{}/market{}_size{}/'.format(experiment_number,
-                                             market,
-                                             portfolio_size))
+sample_number = 2
+portfolio_size = 2
+data_folder = ('/Users/julybelost/Documents/portfolio-fixed-share/' +
+               'exp{}_market{}/portf_size{}/'.format(experiment_number,
+                                                     market,
+                                                     portfolio_size))
+download_path = data_folder + 'input/finam_raw/'
 
-print('result files will be in ' + data_folder)
-mkpath(data_folder)
+mkpath(download_path)
+mkpath(data_folder + 'results/')
+print('result files will be in ' + download_path)
+
 
 emitent_list = emitent_names.get_market_emitents(market)[1]
 
@@ -44,7 +47,7 @@ for i in range(sample_number):
 for p in portfolios:
     print(p['emitents'])
     finam_export.gather_finam_data(period = finam_export.Period.min,
-                                    from_str = '08.01.2012',
-                                    to_str = '08.07.2018',
-                                    path = data_folder,
-                                    **p)
+                                   from_str = '08.01.12',
+                                   to_str = '08.07.18',
+                                   path = download_path,
+                                   **p)

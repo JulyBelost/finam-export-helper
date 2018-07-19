@@ -65,8 +65,8 @@ def gather_finam_data(emitents, from_str, to_str,
     """
     result = []
 
-    from_date = dt.strptime(from_str, "%d.%m.%Y").date()
-    to_date = dt.strptime(to_str, "%d.%m.%Y").date()
+    from_date = dt.strptime(from_str, "%d.%m.%y").date()
+    to_date = dt.strptime(to_str, "%d.%m.%y").date()
 
     for i in range(len(emitents)):
         ticker = emitents[i][0]
