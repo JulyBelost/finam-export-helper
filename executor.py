@@ -26,7 +26,8 @@ data_folder = ('/Users/julybelost/Documents/portfolio-fixed-share/' +
 download_path = data_folder + 'input/finam_raw/'
 
 mkpath(download_path)
-mkpath(data_folder + 'results/')
+mkpath(data_folder + 'results/plot_data/')
+
 print('result files will be in ' + download_path)
 
 
